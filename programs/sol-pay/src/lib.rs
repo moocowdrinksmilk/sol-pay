@@ -3,7 +3,7 @@ use instructions::*;
 
 pub mod state;
 pub mod instructions;
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+declare_id!("HS59oAVB73bP2gnrU3eeaUfGkpQwoBLsByMH7AAwsCwe");
 
 #[program]
 pub mod sol_pay {

@@ -1,7 +1,7 @@
 [features]
 seeds = false
 [programs.localnet]
-sol_pay = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+sol_pay = "HS59oAVB73bP2gnrU3eeaUfGkpQwoBLsByMH7AAwsCwe"
 
 [registry]
 url = "https://anchor.projectserum.com"
