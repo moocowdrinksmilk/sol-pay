@@ -125,5 +125,10 @@ describe("sol-pay", () => {
             receivingA
         )
     })
+    
+    it("Transfer lamports", () => {
+        const receiving = anchor.web3.Keypair.generate()
+        const giving = anchor.web3.Keypair.generate()
+    })
 
 });

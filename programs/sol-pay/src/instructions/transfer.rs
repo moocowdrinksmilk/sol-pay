@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, CloseAccount, Mint, SetAuthority, TokenAccount, Transfer};
-use crate::state::ReceiverDetails;
+use crate::state::{ReceiverDetails, ReceiverLamportDetails};
 
 pub fn transfer_to_receiver(ctx: Context<TransferToken>, avail_amount: u64) -> Result<()> {
     let transfer_amount = ctx.accounts.receiver.amount;
@@ -12,6 +12,27 @@ pub fn transfer_to_receiver(ctx: Context<TransferToken>, avail_amount: u64) -> R
     token::transfer(
         ctx.accounts.into_tranfer_token_receiver_account(),
         transfer_amount
+    );
+    Ok(())
+}
+
+pub fn transfer_to_lamport_receiver(ctx: Context<TransferLamports>, avail_amount: u64) -> Result<()> {
+    let sender = &mut ctx.accounts.sender.key.clone();
+    let receiver = &mut ctx.accounts.receiver.receiver_pubkey.clone();
+    let amount = ctx.accounts.receiver.amount.clone();
+    if amount > avail_amount {
+        panic!()
+    }
+    let ix = anchor_lang::solana_program::system_instruction::transfer(
+        sender,
+        receiver,
+        amount,
+    );
+    anchor_lang::solana_program::program::invoke(
+        &ix,
+        &[
+            ctx.accounts.sender.to_account_info()
+        ]
     );
     Ok(())
 }
@@ -30,6 +51,14 @@ pub struct TransferToken<'info> {
     token_program: AccountInfo<'info>
 }
 
+#[derive(Accounts)]
+pub struct TransferLamports<'info> {
+    #[account(mut)]
+    sender: Signer<'info>,
+    #[account(mut)]
+    receiver: Account<'info, ReceiverLamportDetails>
+}
+
 impl<'info> TransferToken<'info> {
     pub(crate) fn into_tranfer_token_receiver_account(&self) -> CpiContext<'_, '_, '_, 'info, Transfer<'info>> {
         let cpi_accounts = Transfer {
@@ -42,3 +71,4 @@ impl<'info> TransferToken<'info> {
         CpiContext::new(self.token_program.clone(), cpi_accounts)
     }
 }
+

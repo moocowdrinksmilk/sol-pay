@@ -18,6 +18,13 @@ pub struct ReceiverDetails {
     pub amount: u64, 
     pub token_account: Pubkey
 }
+
+#[account()]
+pub struct ReceiverLamportDetails {
+    pub amount: u64,
+    pub receiver_pubkey: Pubkey
+}
+
 impl<'info> Receiver <'info> {
     fn into_receiver_token_account_context(&self, sender_account: AccountInfo<'info>) -> CpiContext<'_, '_, '_, 'info, Transfer<'info>> {
         let cpi_accounts = Transfer {
