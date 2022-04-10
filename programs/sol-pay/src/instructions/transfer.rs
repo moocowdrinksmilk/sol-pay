@@ -23,17 +23,22 @@ pub fn transfer_to_lamport_receiver(ctx: Context<TransferLamports>, avail_amount
     if amount > avail_amount {
         panic!()
     }
-    let ix = anchor_lang::solana_program::system_instruction::transfer(
+    /*let ix = anchor_lang::solana_program::system_instruction::transfer(
         sender,
         receiver,
         amount,
     );
+    msg!(&sender.to_string());
+    msg!(&receiver.to_string());
     anchor_lang::solana_program::program::invoke(
         &ix,
         &[
             ctx.accounts.sender.to_account_info()
         ]
     );
+    Ok(())*/
+    **ctx.accounts.sender.try_borrow_mut_lamports()? -= amount;
+    **ctx.accounts.getter.try_borrow_mut_lamports()? += amount;
     Ok(())
 }
 
@@ -55,8 +60,10 @@ pub struct TransferToken<'info> {
 pub struct TransferLamports<'info> {
     #[account(mut)]
     sender: Signer<'info>,
+    /// CHECK: This is not dangerous because we don't read or write from this account
+    getter: AccountInfo<'info>,
     #[account(mut)]
-    receiver: Account<'info, ReceiverLamportDetails>
+    receiver: Account<'info, ReceiverLamportDetails>,
 }
 
 impl<'info> TransferToken<'info> {

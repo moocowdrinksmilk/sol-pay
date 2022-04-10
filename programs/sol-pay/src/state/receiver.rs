@@ -22,7 +22,7 @@ pub struct ReceiverDetails {
 #[account()]
 pub struct ReceiverLamportDetails {
     pub amount: u64,
-    pub receiver_pubkey: Pubkey
+    pub receiver_pubkey:Pubkey,
 }
 
 impl<'info> Receiver <'info> {
